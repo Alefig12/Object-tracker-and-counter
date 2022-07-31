@@ -14,7 +14,6 @@ nms_threshold = 0.5 # The lower, the more it will supress boxes. Meaning 1 is no
 cap = cv2.VideoCapture('test_video.mp4')
 net = cv2.dnn.readNet(model_path)
 
-
 classes= []
 with open(classesFile, 'rt') as f:
     classes = f.read().rstrip('\n').split('\n')
@@ -63,8 +62,7 @@ while True:
                 distance = math.dist(point, point2)
 
                 if distance < 20:
-                    tracking_objects[object_id] = point
-                    track_id += 1       
+                    tracking_objects[object_id] = point   
                     object_exists = True
                     if point in center_points_frame:
                         center_points_frame.remove(point)
@@ -90,14 +88,15 @@ while True:
 
     center_points_past_frame = center_points_frame.copy()
 
+
     if cv2.waitKey(25) & 0xFF == ord('q'):
       break
 
 
 
 
-
-
+cap.release()
+cv2.destroyAllWindows()
 
 
 
