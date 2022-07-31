@@ -11,7 +11,7 @@ classesFile = 'dnn_model\classes.txt'
 detection_threshold = 0.45
 nms_threshold = 0.5 # The lower, the more it will supress boxes. Meaning 1 is no supression at all
 
-cap = cv2.VideoCapture('test_video.mp4')
+cap = cv2.VideoCapture(r'test media\test_video.mp4')
 net = cv2.dnn.readNet(model_path)
 
 classes= []
