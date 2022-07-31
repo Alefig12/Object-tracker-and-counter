@@ -14,38 +14,47 @@ def detectObjects(net):
     return net.forward(net.getUnconnectedOutLayersNames())
 
     
+#Draw detections based on thresholds and if you want labels shown, default True   
+def getDetectData(img, predicted, classNames, detection_threshold = 0.45, nms_threshold = 0.5):
     
-def drawDetections(img, predicted, classNames, detection_threshold = 0.45, nms_threshold = 0.5):
-    
-    boxes, confidences, classes_id = getDetectionProperties(img, predicted, detection_threshold)
-
+    boxes_, confidences_, classes_id_ = getDetectionProperties(img, predicted, detection_threshold)
 
 
     # Filter overlaped boxes
-    indices = cv2.dnn.NMSBoxes(boxes, confidences, detection_threshold, nms_threshold)
+    indices = cv2.dnn.NMSBoxes(boxes_, confidences_, detection_threshold, nms_threshold)
 
-    # Draw Boxes and labels on image
-
-    draw_boxes(img, boxes, indices, classNames, classes_id, confidences)
-    return
-
-
-
-
-
-def draw_boxes(img, boxes, indices, classNames, classes_id, confidences):
+    # Get filtered boxes, confidences and class names
+    boxes = []
+    confidences = []
+    classesName = []
 
     for i in indices:
-        box = boxes[i]
-        x, y, w, h = box[0], box[1], box[2], box[3]
-        className = classNames[classes_id[i]]
-        confidence = confidences[i]
-        label = '{}:{:.2f}'.format(className, confidence)
-        draw_label(img, label,x,y)
+        boxes.append(boxes_[i])
+        confidences.append(confidences_[i])
+        classesName.append(classNames[classes_id_[i]])
 
+
+    return boxes, confidences, classesName
+
+
+
+
+
+def draw_boxes(img, boxes, classNames, confidences, labels = True):
+
+    for i, box in enumerate(boxes):
         
+        x, y, w, h = box[0], box[1], box[2], box[3]
+        className = classNames[i]
+        confidence = confidences[i]
+
+        if labels:
+            label = '{}:{:.2f}'.format(className, confidence)
+            draw_label(img, label,x,y)
+
 
         cv2.rectangle(img, (x, y),  (x + w, y + h), (0, 0, 255), thickness=2)
+       
 
 def getDetectionProperties(img, predicted, detection_threshold):
 
@@ -86,12 +95,13 @@ def getDetectionProperties(img, predicted, detection_threshold):
 
 def draw_label(img, label, x, y):
 
-
-    text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+    font_size = 0.47
+    thickness = 1
+    text_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_size, thickness)
     dim, baseline = text_size[0], text_size[1]
 
     cv2.rectangle(img, (x,y), (x + dim[0], y + dim[1] + baseline), (0,0,0), cv2.FILLED)
 
-    cv2.putText(img, label, (x, y + dim[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,255), 1, cv2.LINE_AA)
+    cv2.putText(img, label, (x, y + dim[1]), cv2.FONT_HERSHEY_SIMPLEX, font_size, (0,255,255), thickness, cv2.LINE_AA)
 
 
