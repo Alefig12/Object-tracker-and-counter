@@ -2,7 +2,7 @@
 Basic object tracker made in python from scratch with OpenCV using YOLOv5 object detection.
 
 
-This is my first project about object detection and tracking, the test video I used are cars on a highway the main goal was to detect, track and ID the moving cars. To use it you may change the path for the test video on tracking.py
+This is my first project about object detection and tracking, the test video I used are cars on a highway. The main goal was to detect, track and ID the moving cars. To use it you may change the path for the test video on tracking.py
 
 As the tracker is made from scratch, it's not perfect but it acomplishes the main goal, so for now I'm satisfied with the result.
 
